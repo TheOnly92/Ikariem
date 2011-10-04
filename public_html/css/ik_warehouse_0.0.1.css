@@ -1,0 +1,28 @@
+#warehouse
+.buildingDescription{background:url(../img/buildings/y100/warehouse.gif) no-repeat right 10px}
+#warehouse
+.buildingDescription{height:auto}
+#warehouse .sicher, #warehouse .gesamt, #warehouse
+.klaubar{vertical-align:top}
+#warehouse #container #mainview
+span.secure{font-weight:bold;color:#090}
+#warehouse #container #mainview
+span.insecure{font-weight:bold;color:#F00}
+#warehouse #container #mainview
+.table01{border:0px;margin-top:10px;margin-bottom:10px}
+#warehouse #container .dynamic
+table.safeinnextlevel{margin:0px
+auto}
+#warehouse #container .dynamic .safeinnextlevel th,
+#warehouse #container .dynamic .safeinnextlevel
+td{padding-left:10px}
+#warehouse #container .dynamic .safeinnextlevel
+th{background-color:#FAEAC6;color:#906646;font-weight:bold;text-align:center}
+#warehouse #container #container2 #mainview
+#premiumbox{padding-left:140px;padding-bottom:20px;width:403px}
+#warehouse #container #container2 #mainview #premiumbox
+.header{background-color:transparent;background-image:url(../img/layout/bg_messageBox_header.gif);background-repeat:no-repeat;height:20px;padding-top:10px;padding-left:10px;font-weight:bold}
+#warehouse #container #container2 #mainview #premiumbox
+.footer{background-image:url(../img/layout/bg_messageBox_footer.gif);background-repeat:no-repeat;height:6px;line-height:1px;font-size:0px;padding:0px}
+#warehouse #container #container2 #mainview #premiumbox
+.content{padding:10px;background-image:url(../img/layout/bg_messageBox.gif)}

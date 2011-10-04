@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+	<changeSet id="1" author="TheOnly92">
+		<sql><![CDATA[
+CREATE TABLE IF NOT EXISTS `buildings_data` (
+  `building_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `building_name` varchar(20) NOT NULL,
+  `building_desc` text NOT NULL,
+  `building_tech` int(10) unsigned NOT NULL,
+  `building_type` tinyint(1) unsigned NOT NULL,
+  `building_css` varchar(15) NOT NULL,
+  PRIMARY KEY (`building_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+INSERT INTO `buildings_data` (`building_id`, `building_name`, `building_desc`, `building_tech`, `building_type`, `building_css`) VALUES
+(1, 'Town hall', 'At the heart of the town you can find the town hall through which the town grows and flourishes. The smart civil servants, who work here, love to give you information about your local population Every expansion of the town hall increases the maximum number of citizens in this town.', 0, 0, 'townHall'),
+(2, 'Trading port', 'The port is your gateway to the world. Here you can hire trade ships and ready them for long journeys. You can also receive precious goods from places far away Larger trading ports can load ships faster.', 0, 1, 'port'),
+(3, 'Shipyard', 'What would an island empire be without its fleet? ?At the shipyard, mighty battle ships are made ready and launched for long journeys over the oceans. May the seven seas tremble before them!? Larger Shipyards can build the ships faster.', 4, 1, 'shipyard'),
+(4, 'Academy', 'The academy is a sublime place full of knowledge which combines the old traditions with modern technology. The wisest heads of your town await entrance! Consider that every scientist needs his own laboratory which costs money. The larger the academy the more scientists you can employ at the same time.', 0, 0, 'academy'),
+(5, 'Warehouse', 'A part of your supplies is protected at the warehouse. It keeps mean pillagers, rain, birds and other pests away. The warehouse keeper is also always well informed about your resource storage. Expanding your warehouse allows you to protect more supplies', 2, 0, 'warehouse'),
+(6, 'Barracks', 'In the barracks the boisterous youth is instructed to become keen fighters. Your soldiers know how to handle swords, spears and catapults and are also able to lead the mightiest war machines safely over the field. The troops are instructed faster when you expand your barracks.', 0, 0, 'barracks'),
+(7, 'Town wall', 'The town wall protects your citizens against your enemies and the sun. Beware! Enemies will try to tear holes into your wall or to climb over it. Every level increases the resistance of your town wall.', 0, 2, 'wall'),
+(8, 'Carpenter', 'Only the best lumber is used at the carpenter`s workshop. Therefore our handy craftsmen are able to build a solid framework and our houses don`t have to be repaired all the time. Every level of the carpenter`s workshop lowers your demand for building material by 1% of the basic value.', 1, 0, 'carpentering'),
+(9, 'Tavern', 'After a hard day`s work there is nothing more pleasant than a cool jug of wine. That`s why your citizens love to meet at the tavern. And when the last old songs have been sung at the end of the day, they set out merrily and cheerful to their homes. Every expansion of your tavern allows you to serve more wine.', 14, 0, 'tavern'),
+(10, 'Hideout', 'A wise leader always has an eye on both his allies and his enemies. The hideout allows you to hire spies who are able to provide you with information from the inside of other towns. A larger hideout provides space for more spies.', 11, 0, 'safehouse');
+		]]></sql>
+		
+		<sql><![CDATA[
+CREATE TABLE IF NOT EXISTS `ikmessages` (
+  `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `message_sender` int(10) unsigned NOT NULL,
+  `message_receiver` int(10) unsigned NOT NULL,
+  `message_date` int(10) unsigned NOT NULL,
+  `message_town` int(10) unsigned NOT NULL,
+  `message_subject` tinyint(1) unsigned NOT NULL,
+  `message_body` text NOT NULL,
+  `message_new` tinyint(1) NOT NULL,
+  `message_deleted` tinyint(1) NOT NULL,
+  `message_outbox` tinyint(1) NOT NULL COMMENT 'If sender deletes then true',
+  PRIMARY KEY (`message_id`),
+  KEY `message_sender` (`message_sender`),
+  KEY `message_receiver` (`message_receiver`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+		]]></sql>
+		
+		<sql><![CDATA[
+ALTER TABLE `towns` ADD `town_spies` INT UNSIGNED NOT NULL 
+		]]></sql>
+		
+		<sql><![CDATA[
+CREATE TABLE IF NOT EXISTS `spies_queue` (
+  `town_id` int(10) unsigned NOT NULL,
+  `startdate` int(10) unsigned NOT NULL,
+  `enddate` int(10) unsigned NOT NULL,
+  `value` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`town_id`,`startdate`),
+  KEY `town_id` (`town_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+		]]></sql>
+	</changeSet>
+	
+	<changeSet id="362" author="TheOnly92">
+		<sql><![CDATA[
+CREATE TABLE `tradings` (
+`trading_town` INT UNSIGNED NOT NULL ,
+`trading_island` INT UNSIGNED NOT NULL ,
+`trading_resource0_val` BIGINT UNSIGNED NOT NULL ,
+`trading_resource0_price` INT UNSIGNED NOT NULL ,
+`trading_resource0_type` BOOLEAN NOT NULL ,
+`trading_resource1_val` BIGINT UNSIGNED NOT NULL ,
+`trading_resource1_price` INT UNSIGNED NOT NULL ,
+`trading_resource1_type` BOOLEAN NOT NULL ,
+`trading_resource2_val` BIGINT UNSIGNED NOT NULL ,
+`trading_resource2_price` INT UNSIGNED NOT NULL ,
+`trading_resource2_type` BOOLEAN NOT NULL ,
+`trading_resource3_val` BIGINT UNSIGNED NOT NULL ,
+`trading_resource3_price` INT UNSIGNED NOT NULL ,
+`trading_resource3_type` BOOLEAN NOT NULL ,
+`trading_resource4_val` BIGINT UNSIGNED NOT NULL ,
+`trading_resource4_price` INT UNSIGNED NOT NULL ,
+`trading_resource4_type` BOOLEAN NOT NULL ,
+PRIMARY KEY ( `trading_town` )
+) ENGINE = MYISAM ;
+		]]></sql>
+		
+		<sql>ALTER TABLE `tradings` ADD INDEX ( `trading_town` , `trading_island` ) ;</sql>
+		
+		<sql><![CDATA[
+CREATE TABLE `transports` (
+  `trans_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `trans_uid` int(10) unsigned NOT NULL,
+  `trans_ships` int(10) unsigned NOT NULL,
+  `trans_origin` int(10) unsigned NOT NULL,
+  `trans_destination` int(10) unsigned NOT NULL,
+  `trans_mission` tinyint(3) unsigned NOT NULL,
+  `trans_startdate` int(10) unsigned NOT NULL,
+  `trans_enddate` int(10) unsigned NOT NULL,
+  `trans_cargo` text NOT NULL,
+  PRIMARY KEY (`trans_id`),
+  KEY `trans_uid` (`trans_uid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+		]]></sql>
+		
+		<sql>ALTER TABLE `towns` ADD `town_wine` TINYINT UNSIGNED NOT NULL </sql>
+	</changeSet>
+	
+	<changeSet id="389" author="TheOnly92">
+		<sql>ALTER TABLE `users` ADD `usr_lastactive` INT UNSIGNED NOT NULL AFTER `usr_activation` </sql>
+		<sql>ALTER TABLE `users` ADD `usr_vacation` INT UNSIGNED NOT NULL </sql>
+	</changeSet>
+	
+	<changeSet id="395" author="TheOnly92">
+		<sql><![CDATA[
+INSERT INTO `buildings_data` (
+`building_id` ,
+`building_name` ,
+`building_desc` ,
+`building_tech` ,
+`building_type` ,
+`building_css`
+)
+VALUES (
+NULL , 'Palace', 'The palace is an excellent place to lead your empire into the future! It also provides a gorgeous view onto the sea. Every expansion of your capital`s palace allows you to set up a further colony.', '13', '0', 'palace'
+);
+		]]></sql>
+	</changeSet>
+	
+	<changeSet id="415" author="TheOnly92">
+		<sql><![CDATA[
+CREATE TABLE IF NOT EXISTS `highscores` (
+  `highscore_user` int(10) unsigned NOT NULL,
+  `highscore_builders` int(10) unsigned NOT NULL,
+  `highscore_builders_rank` int(10) unsigned NOT NULL,
+  `highscore_buildlvl` int(10) unsigned NOT NULL,
+  `highscore_buildlvl_rank` int(10) unsigned NOT NULL,
+  `highscore_scientists` int(10) unsigned NOT NULL,
+  `highscore_scientists_rank` int(10) unsigned NOT NULL,
+  `highscore_research` int(10) unsigned NOT NULL,
+  `highscore_research_rank` int(10) unsigned NOT NULL,
+  `highscore_military` int(10) unsigned NOT NULL,
+  `highscore_military_rank` int(10) unsigned NOT NULL,
+  `highscore_gold` bigint(20) unsigned NOT NULL,
+  `highscore_gold_rank` int(10) unsigned NOT NULL,
+  `highscore_offense` int(10) unsigned NOT NULL,
+  `highscore_offense_rank` int(10) unsigned NOT NULL,
+  `highscore_defense` int(10) unsigned NOT NULL,
+  `highscore_defense_rank` int(10) unsigned NOT NULL,
+  `highscore_trade` int(10) unsigned NOT NULL,
+  `highscore_trade_rank` int(10) unsigned NOT NULL,
+  `highscore_resources` int(10) unsigned NOT NULL,
+  `highscore_resources_rank` int(10) unsigned NOT NULL,
+  `highscore_donate` int(10) unsigned NOT NULL,
+  `highscore_donate_rank` int(10) unsigned NOT NULL,
+  `highscore_total` bigint(20) unsigned NOT NULL,
+  `highscore_total_rank` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`highscore_user`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+		]]></sql>
+		
+		<sql><![CDATA[
+INSERT INTO `buildings_data` (
+`building_id` ,
+`building_name` ,
+`building_desc` ,
+`building_tech` ,
+`building_type` ,
+`building_css`
+)
+VALUES (
+NULL , 'Governor`s Residence', 'A governor in your colony guarantees, that all the daily administrative tasks are done properly. He also lowers the level of corruption in your colony. The governor`s residence can also be upgraded to a palace if you ever want to move your capital.', '13', '0', 'palaceColony'
+);
+		]]></sql>
+		
+		<sql><![CDATA[
+CREATE TABLE `barbarian` (
+`barbarian_user` INT UNSIGNED NOT NULL ,
+`barbarian_attacks` TINYINT( 2 ) UNSIGNED NOT NULL ,
+PRIMARY KEY ( `barbarian_user` )
+) ENGINE = MYISAM ;
+		]]></sql>
+	</changeSet>
+	
+	<changeSet id="432" author="TheOnly92">
+		<sql><![CDATA[
+ALTER TABLE `transports` ADD `trans_troops` INT UNSIGNED NOT NULL ,
+ADD `trans_fleets` INT UNSIGNED NOT NULL 
+		]]></sql>
+		<sql>ALTER TABLE `transports` ADD `trans_armies` TEXT NOT NULL AFTER `trans_cargo` </sql>
+		<sql><![CDATA[
+CREATE TABLE IF NOT EXISTS `combats` (
+  `combat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `combat_trans` int(10) unsigned NOT NULL,
+  `combat_attacker` int(10) unsigned NOT NULL,
+  `combat_defender` int(10) unsigned NOT NULL,
+  `combat_nextround` int(10) unsigned NOT NULL,
+  `combat_data` blob NOT NULL,
+  PRIMARY KEY (`combat_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `combats_reports` (
+  `report_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `report_date` int(10) unsigned NOT NULL,
+  `report_attacker` int(10) unsigned NOT NULL,
+  `report_defender` int(10) unsigned NOT NULL,
+  `report_title` varchar(100) NOT NULL,
+  `report_winner` tinyint(1) NOT NULL,
+  `report_anew` tinyint(1) NOT NULL,
+  `report_dnew` tinyint(1) NOT NULL,
+  PRIMARY KEY (`report_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `combats_rounds` (
+  `round_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `round_parent` int(10) unsigned NOT NULL,
+  `round_round` int(10) unsigned NOT NULL,
+  `round_data` blob NOT NULL,
+  PRIMARY KEY (`round_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+		]]></sql>
+	</changeSet>
+	
+	<changeSet id="438" author="TheOnly92">
+		<sql>ALTER TABLE `combats_rounds` ADD `round_time` INT UNSIGNED NOT NULL AFTER `round_round` </sql>
+	</changeSet>
+ 
+</databaseChangeLog>
